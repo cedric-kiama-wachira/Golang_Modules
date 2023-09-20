@@ -1,23 +1,33 @@
 package greetings
 
 import (
-    // Imported the GO standard errors package 
     "errors"
     "fmt"
+    "math/rand"
 )
 
 // Hello returns a greeting for the named person.
-// Updated by changing the function so that it returns two values: a string and an error. My caller will check the second value to see if an error occurred.
 func Hello(name string) (string, error) {
     // If no name was given, return an error with a message.
-    // Add an if statement to check for an invalid request (an empty string where the name should be) and return an error if the request is invalid. The errors.New function returns an error with my message inside.
     if name == "" {
-        return "", errors.New("empty name")
+        return name, errors.New("empty name")
+    }
+    // Create a message using a random format.
+    message := fmt.Sprintf(randomFormat(), name)
+    return message, nil
+}
+
+// randomFormat returns one of a set of greeting messages. The returned
+// message is selected at random.
+func randomFormat() string {
+    // A slice of message formats.
+    formats := []string{
+        "Hi, %v. Welcome!",
+        "Great to see you, %v!",
+        "Hail, %v! Well met!",
     }
 
-    // If a name was received, return a value that embeds the name
-    // in a greeting message.
-    message := fmt.Sprintf("Hi, %v. Welcome!", name)
-    // Added nil (meaning no error) as a second value in the successful return. That way, the caller can see that the function succeeded.
-    return message, nil
+    // Return a randomly selected message format by specifying
+    // a random index for the slice of formats.
+    return formats[rand.Intn(len(formats))]
 }
